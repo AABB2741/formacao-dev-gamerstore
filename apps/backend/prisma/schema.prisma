@@ -1,0 +1,82 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id             Int      @id @default(autoincrement())
+  name           String
+  description    String
+  brand          String
+  model          String
+  imageUrl       String   @map("image_url")
+  rating         Float
+  videoReviewUrl String   @map("video_review_url")
+  tags           String[]
+
+  basePrice        Float @map("base_price")
+  promotionalPrice Float @map("promotional_price")
+  lowestPrice      Float @map("lowest_price")
+  highestPrice     Float @map("highest_price")
+  averagePrice     Float @map("average_price")
+
+  specifications Json
+
+  items OrderItem[]
+
+  @@map("products")
+}
+
+model Order {
+  id            Int      @id @default(autoincrement())
+  date          DateTime
+  totalPrice    Float    @map("total_price")
+  status        String
+  paymentMethod String   @map("payment_method")
+
+  delivery   DeliveryItem @relation(fields: [deliveryId], references: [id])
+  deliveryId Int          @unique @map("delivery_id")
+
+  items OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id        Int   @id @default(autoincrement())
+  amount    Int
+  unitPrice Float @map("unit_price")
+
+  order   Order @relation(fields: [orderId], references: [id])
+  orderId Int   @map("order_id")
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+
+  @@map("order_items")
+}
+
+model DeliveryItem {
+  id          Int    @id @default(autoincrement())
+  name        String
+  email       String
+  cpf         String
+  publicPlace String @map("public_place")
+  complement  String
+  city        String
+  state       String
+
+  order Order?
+
+  @@map("delivery_items")
+}

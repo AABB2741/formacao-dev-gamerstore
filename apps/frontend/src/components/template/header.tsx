@@ -1,11 +1,13 @@
+"use client";
+
+import { useCart } from "@/hooks/use-cart";
 import Link from "next/link";
 import { CartIcon } from "../shared/cart-icon";
 import { Logo } from "../shared/logo";
 // import useCarrinho from '@/data/hooks/useCarrinho'
 
 export function Header() {
-  const itemCount = 0;
-  // const { qtdeItens } = useCarrinho()
+  const { itemCount } = useCart();
   return (
     <div
       className="flex flex-col h-20 w-screen"

@@ -1,5 +1,6 @@
 "use client";
 
+import { useCart } from "@/hooks/use-cart";
 import { useInstallment } from "@/hooks/use-installment";
 import { Currency, type Product } from "@gstore/core";
 import { IconCreditCard, IconShoppingCart } from "@tabler/icons-react";
@@ -11,19 +12,19 @@ export interface ShoppingBannerProps {
 
 export function ShoppingBanner({ product }: ShoppingBannerProps) {
   const router = useRouter();
-  // const { adicionarItem } = useCarrinho()
+  const { addItem } = useCart();
   const { installment } = useInstallment(product.promotionalPrice);
 
   return (
     <div className="flex">
       <div className="flex flex-col border-r border-zinc-500 pr-5">
         <div className="line-through text-zinc-400">
-          de R$ {product.basePrice}
+          de {Currency.format({ value: product.basePrice })}
         </div>
         <div className="text-2xl font-semibold">
           <span className="text-base text-zinc-300">por</span>{" "}
           <span className="text-emerald-500">
-            R$ {product.promotionalPrice}
+            {Currency.format({ value: product.promotionalPrice })}
           </span>{" "}
           <span className="text-base text-zinc-300">à vista</span>
         </div>
@@ -37,8 +38,7 @@ export function ShoppingBanner({ product }: ShoppingBannerProps) {
       <div className="flex gap-2 items-center">
         <button
           className="flex-1 button bg-pink-600"
-          onClick={() => {}}
-          // onClick={() => adicionarItem(produto)}
+          onClick={() => addItem(product)}
         >
           <IconShoppingCart size={20} />
           <span>Adicionar</span>
@@ -46,7 +46,7 @@ export function ShoppingBanner({ product }: ShoppingBannerProps) {
         <button
           className="flex-1 button bg-violet-700"
           onClick={() => {
-            // adicionarItem(produto)
+            addItem(product);
             router.push("/checkout/pagamento");
           }}
         >

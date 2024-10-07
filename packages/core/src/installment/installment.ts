@@ -1,5 +1,5 @@
 export interface Installment {
-  totalValue: number;
+  totalPrice: number;
   installmentPrice: number;
   installmentAmount: number;
   interestRate: number;
